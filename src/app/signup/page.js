@@ -1,10 +1,11 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import { Loading } from '@/components/dotLoading'
 export default function SignUp() {
   const router = useRouter();
   const [loading, setIsLoading] = useState(false);
@@ -14,17 +15,21 @@ export default function SignUp() {
     email: '',
     password: ''
   })
-
   const onSignUp = async (event) => {
     event.preventDefault()
     if (!isCheck) {
-      toast("Please read agency Terms and Conditions",{duration: 4000,});
+      toast("Please read agency Terms and Conditions", { duration: 4000, });
       return;
     }
+    if (userData.password.length < 6 || userData.password.length > 20) {
+      toast("Please provide password within 6 - 19 character ", { duration: 4000, });
+      return;
+    }
+
     try {
       setIsLoading(true)
       const response = await axios.post("/api/users/signUp", userData);
-      console.log(response)
+      router.push(`/login?userDate=${encodeURIComponent(JSON.stringify(userData))}`);
       toast.success(response.data.message);
     } catch (error) {
       setIsLoading(false)
@@ -323,12 +328,14 @@ export default function SignUp() {
               </div>
             </div>
             <div>
-              <button
-                type="submit"
-                className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
-              >
-                Sign Up
-              </button>
+              {!loading ?
+                <button
+                  type="submit"
+                  className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
+                >
+                  Sign Up
+                </button> : <Loading />}
+
             </div>
           </form>
           <div className="mt-4 text-sm text-gray-600 text-center">

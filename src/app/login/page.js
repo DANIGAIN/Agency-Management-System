@@ -1,7 +1,43 @@
-import React from 'react'
+"use client"
 import Link from 'next/link'
+import axios from 'axios'
+import React ,{useState , useEffect} from 'react'
+import { useRouter , useSearchParams} from 'next/navigation'
+import { Loading } from '@/components/dotLoading'
+import toast from 'react-hot-toast'
 export default function Login() {
-    return (
+    const router = useRouter();
+    const searchParams = useSearchParams()
+    const search = searchParams.get('userDate')
+    const [loading, setIsLoading] = useState(false);
+    const [userData, setUserData] = useState({
+        name: '',
+        email: '',
+        password: ''
+      })
+
+      useEffect(() => {
+        if (search) {setUserData(JSON.parse(search));}
+      }, [search]); 
+
+      const onLogin = async(event) =>{
+        event.preventDefault()
+    
+        try {
+          setIsLoading(true)
+          const response = await axios.post("/api/users/login", userData);
+          console.log(response)
+          router.push('/profile')
+        } catch (error) {
+          setIsLoading(false)
+          toast.error(error.response.data.error)
+
+        } finally {
+          setIsLoading(false)
+        }
+      }
+
+    return (  
         <div className="flex h-screen">
             <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
                 <div className="max-w-md text-center">
@@ -277,7 +313,7 @@ export default function Login() {
                     <div className="mt-4 text-sm text-gray-600 text-center">
                         <p>or with email</p>
                     </div>
-                    <form action="#" method="POST" className="space-y-4">
+                    <form onSubmit={onLogin} className="space-y-4">
                         <div>
                             <label
                                 htmlFor="email"
@@ -289,7 +325,9 @@ export default function Login() {
                                 type="text"
                                 id="email"
                                 name="email"
-                                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
+                                value={userData.email}
+                                onChange={(e) => setUserData((prev) => ({ ...prev, email: e.target.value }))}
+                                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 text-gray-500"
                             />
                         </div>
                         <div>
@@ -303,17 +341,20 @@ export default function Login() {
                                 type="password"
                                 id="password"
                                 name="password"
-                                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
+                                value={userData.password}
+                                onChange={(e) => setUserData((prev) => ({ ...prev, password: e.target.value }))}
+                                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 text-gray-500"
                             />
                         </div>
 
                         <div>
-                            <button
-                                type="submit"
-                                className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
-                            >
-                                Login
-                            </button>
+                        {!loading ?
+                  <button
+                    type="submit"
+                    className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
+                  >
+                    Login 
+                  </button> : <Loading />}
                         </div>
                     </form>
                     <div className="mt-4 mb-3 text-sm text-gray-600 text-center">
