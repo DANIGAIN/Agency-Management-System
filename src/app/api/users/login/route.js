@@ -1,5 +1,5 @@
 import User from "@/models/userModel";
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import { connect } from "@/db/dbConfig";
 import jwt from "jsonwebtoken";
@@ -21,8 +21,6 @@ export async function POST(request) {
             if (!varifyPassword) {
                 return NextResponse.json({ error: "Invalid Password" }, { status: 400 });
             }
-
-
             //create token --> 
             const tokenData = {
                 id: user._id,
@@ -36,7 +34,7 @@ export async function POST(request) {
                 success: true,
                 user
             })
-            res.cookies.set('token', token, { httpOnly: true })
+            res.cookies.set('token', token, { httpOnly: true , expires:new Date(Date.now() + 2589200000), })
             return res;
         }
     } catch (error) {
