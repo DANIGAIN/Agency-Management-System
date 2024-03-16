@@ -3,11 +3,14 @@ import Link from 'next/link'
 import axios from 'axios'
 import React ,{useState , useEffect} from 'react'
 import { useRouter , useSearchParams} from 'next/navigation'
+import { useSelector , useDispatch } from 'react-redux'
 import { Loading } from '@/components/dotLoading'
 import toast from 'react-hot-toast'
+import { login } from '@/provider/store/authSlice'
 export default function Login() {
     const router = useRouter();
     const searchParams = useSearchParams()
+    const dispatch = useDispatch()
     const search = searchParams.get('userDate')
     const [loading, setIsLoading] = useState(false);
     const [userData, setUserData] = useState({
@@ -22,16 +25,16 @@ export default function Login() {
 
       const onLogin = async(event) =>{
         event.preventDefault()
-    
         try {
           setIsLoading(true)
           const response = await axios.post("/api/users/login", userData);
-          console.log(response)
-          router.push('/profile')
+          if(response){      
+            dispatch(login(response.data.user))
+            router.push('/profile')
+          } 
         } catch (error) {
           setIsLoading(false)
           toast.error(error.response.data.error)
-
         } finally {
           setIsLoading(false)
         }
