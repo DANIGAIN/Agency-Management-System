@@ -3,7 +3,7 @@ import Link from 'next/link'
 import axios from 'axios'
 import React ,{useState , useEffect} from 'react'
 import { useRouter , useSearchParams} from 'next/navigation'
-import { Loading } from '@/components/dotLoading'
+// import { Loading } from '@/components/dotLoading'
 import toast from 'react-hot-toast'
 export default function Login() {
     const router = useRouter();
@@ -309,6 +309,23 @@ export default function Login() {
                         <p>or with email</p>
                     </div>
                     <form onSubmit={onLogin} className="space-y-4">
+                      <div>
+                            <label
+                                htmlFor="name"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                Name
+                            </label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                placeholder='Enter your name'
+                                // value={userData.email}
+                                // onChange={(e) => setUserData((prev) => ({ ...prev, email: e.target.value }))}
+                                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 text-gray-500"
+                            />
+                        </div>
                         <div>
                             <label
                                 htmlFor="email"
@@ -320,6 +337,7 @@ export default function Login() {
                                 type="text"
                                 id="email"
                                 name="email"
+                                placeholder='Enter your email '
                                 value={userData.email}
                                 onChange={(e) => setUserData((prev) => ({ ...prev, email: e.target.value }))}
                                 className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 text-gray-500"
@@ -329,6 +347,7 @@ export default function Login() {
                             <label
                                 htmlFor="password"
                                 className="block text-sm font-medium text-gray-700"
+                             
                             >
                                 Password
                             </label>
@@ -336,6 +355,7 @@ export default function Login() {
                                 type="password"
                                 id="password"
                                 name="password"
+                                placeholder="Enter your password"
                                 value={userData.password}
                                 onChange={(e) => setUserData((prev) => ({ ...prev, password: e.target.value }))}
                                 className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 text-gray-500"
