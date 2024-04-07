@@ -2,8 +2,8 @@
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
-import React ,{useState , useEffect} from 'react'
-import { useRouter , useSearchParams} from 'next/navigation'
+import React, { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Loading } from '@/components/loading/dot'
 import toast from 'react-hot-toast'
 export default function Login() {
@@ -13,23 +13,24 @@ export default function Login() {
         register,
         handleSubmit,
         formState: { errors },
-      } = useForm()
-    
-    const onSubmit = async(data) =>{
-        try {
-            setIsLoading(true)
-            const response = await axios.post("/api/users/login", userData);
-            if(response){      
-              router.push('/profile')
-            } 
-          } catch (error) {
-            setIsLoading(false)
-            toast.error(error.response.data.error)
-          } finally {
-            setIsLoading(false)
-          }
+    } = useForm()
+
+    const onSubmit = async (data) => {
+        console.log(data)
+        // try {
+        //     setIsLoading(true)
+        //     const response = await axios.post("/api/users/login", userData);
+        //     if (response) {
+        //         router.push('/profile')
+        //     }
+        // } catch (error) {
+        //     setIsLoading(false)
+        //     toast.error(error.response.data.error)
+        // } finally {
+        //     setIsLoading(false)
+        // }
     }
-    return (  
+    return (
         <div className="flex h-screen">
             <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
                 <div className="max-w-md text-center">
@@ -307,69 +308,100 @@ export default function Login() {
                     </div>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
-                            <label
-                                htmlFor="email"
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Email
-                            </label>
+                            {
+                                !errors.email ? (
+                                    <label
+                                        htmlFor="email"
+                                        className="block text-sm font-medium text-gray-700"
+                                    >
+                                        Email
+                                    </label>
+
+                                ) : (
+
+                                    <label
+                                        htmlFor="email"
+                                        className="block text-sm font-medium text-red-700"
+                                    >
+                                        {`${errors.email?.message}`}
+                                    </label>
+                                )
+                            }
+
                             <input
                                 type="text"
+                                {...register("email",
+                                    {
+                                        required: "email is required",
+                                        pattern: {
+                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                            message: "invalid email address"
+                                        }
+                                    })}
                                 id="email"
                                 name="email"
-                                {...register("email", 
-                                {
-                                     required: "email is required",
-                                     pattern:{
-                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                        message: "invalid email address"
-                                    }
-                                })}
-                                value={userData.email}
-                                onChange={(e) => setUserData((prev) => ({ ...prev, email: e.target.value }))}
-                                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 text-gray-500"
+                                placeholder='Enter your email'
+                                className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.email
+                                    ? " border-red-400"
+                                    : " border-gray-400"
+                                    }`}
                             />
                         </div>
-                        <p className='text-left text-red-500 font-mono '> {errors.email?.message}</p>
                         <div>
-                            <label
-                                htmlFor="password"
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Password
-                            </label>
+                            {
+                                !errors.password ?
+                                    (
+                                        <label
+                                            htmlFor="password"
+                                            className="block text-sm font-medium text-gray-700"
+
+                                        >
+                                            Password
+                                        </label>
+                                    ) : (
+                                        <label
+                                            htmlFor="password"
+                                            className="block text-sm font-medium  text-red-700"
+
+                                        >
+                                            {`${errors.password?.message}`}
+
+                                        </label>
+                                    )
+                            }
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
-                                {...register("password", 
-                                    { 
+                                {...register("password",
+                                    {
                                         required: "password is required",
-                                        maxLength:{
-                                            value:30,
-                                            message:"cannot exceed more than 30 characters"
+                                        maxLength: {
+                                            value: 30,
+                                            message: "cannot exceed more than 30 characters"
                                         },
-                                        minLength:{
-                                            value:4,
-                                            message:"should be at least 4 characters"
+                                        minLength: {
+                                            value: 4,
+                                            message: "should be at least 4 characters"
                                         }
                                     })
                                 }
-                                value={userData.password}
-                                onChange={(e) => setUserData((prev) => ({ ...prev, password: e.target.value }))}
-                                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 text-gray-500"
+                                placeholder="Enter your password"
+                                className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.password
+                                    ? " border-red-400"
+                                    : " border-gray-400"
+                                    }`}
                             />
                         </div>
-                        <p className='text-left text-red-500 font-mono '> {errors.password?.message}</p>
 
                         <div>
-                        {!loading ?
-                  <button
-                    type="submit"
-                    className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
-                  >
-                    Login 
-                  </button> : <Loading />}
+                            {!loading ?
+                                <button
+                                    type="submit"
+                                    className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
+                                >
+                                    Login
+                                </button> : <Loading />}
                         </div>
                     </form>
                     <div className="mt-4 mb-3 text-sm text-gray-600 text-center">
@@ -379,7 +411,7 @@ export default function Login() {
                     <div className="mt-3 text-sm text-gray-600 text-center">
                         <p>
                             Do you create an account ?
-                            <Link href="/signup" className='text-black hover:underline'> sign up here</Link>
+                            <Link href="/agency/signup" className='text-black hover:underline'> sign up here</Link>
                         </p>
                     </div>
                 </div>
