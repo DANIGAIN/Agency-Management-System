@@ -1,14 +1,19 @@
 "use client"
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
-import axios from 'axios'
-import React, { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import React, { useState }from 'react'
 import { Loading } from '@/components/loading/dot'
+import { useAppContext } from '@/context'
 import toast from 'react-hot-toast'
+// import  useAppContext  from '@/context'
 export default function Login() {
     const [userData, setUserData] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false)
+    const { user,
+        setUser,
+        isAuthUser,
+        setIsAuthUser} = useAppContext()
+    console.log(user)
     const {
         register,
         handleSubmit,

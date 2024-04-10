@@ -4,9 +4,8 @@ export default function HomeLayout({ children }) {
     return (
         <>
             <Navigation />
-            <div>{children}</div>
-            <Footer/>
+               <div>{children}</div>
+            <Footer />
         </>
-
     );
 }

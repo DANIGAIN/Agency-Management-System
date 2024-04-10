@@ -1,36 +1,48 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    name:{
-        type:String ,
-        required:[true , "please provide a username"]
+    name: {
+        type: String,
+        required: true,
+        trim: true,
+        lowerCase:true,
     },
-    email:{
-        type:String,
-        required:[true , "Please provide a valid email"],
-        unique:[true , "Please provide a unique email"]
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        match: [/^\S+@\S+\.\S+$/, "Please provide a valid email address"]
     },
-    password:{
-        type:String,
-        required:[true ,"please provide a password"]
+    password: {
+        type: String,
+        required: true
     },
-    role:{
+    role: {
         type: Number,
-        require:[true , "plesae provide role"]
+        required: true
     },
-    isVarify:{
-        type:Boolean,
-        default:false
+    isVerified: { 
+        type: Boolean,
+        default: false
     },
-    image:{
-        type:String
+    image: {
+        type: String
     },
-    forgotPasswordToken: String ,
-    forgotPasswordTokenExpiry:Date,
-    varifyToken:String,
-    varifyTokenExpiey:Date,
-},{
-    timestamps: true 
-})
-const User =  mongoose.models.users || mongoose.model("users" , userSchema);
-export default User ;
+    forgotPasswordToken: {
+        type: String
+    },
+    forgotPasswordTokenExpiry: {
+        type: Date
+    },
+    verifyToken: { 
+        type: String
+    },
+    verifyTokenExpiry: { 
+        type: Date
+    }
+}, {
+    timestamps: true
+});
+
+const User = mongoose.models.User || mongoose.model("User", userSchema);
+export default User;

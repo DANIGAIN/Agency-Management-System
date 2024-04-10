@@ -89,7 +89,7 @@ function conditionPage() {
                             generated CSS.
                         </p>
                         <p>
-                            You'll also receive a lot of useful application UI, marketing UI, and
+                            Youll also receive a lot of useful application UI, marketing UI, and
                             e-commerce pages that can help you get started with your projects even
                             faster. You can check out this{" "}
                             <a href="https://flowbite.com/docs/components/tables/">
@@ -134,7 +134,7 @@ function conditionPage() {
                             committing to an actual design project.
                         </p>
                         <p>
-                            Let's start by including the CSS file inside the <code>head</code> tag
+                            Lets start by including the CSS file inside the <code>head</code> tag
                             of your HTML.
                         </p>
                         <h3>Understanding typography</h3>

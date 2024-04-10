@@ -1,35 +1,29 @@
 "use client"
 import Link from 'next/link'
+import React, { useState } from 'react'
 import axios from 'axios'
-import React, { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-// import { Loading } from '@/components/dotLoading'
 import toast from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
-export default function Login() {
+import { Loading } from '@/components/loading/dot'
+import { useRouter } from 'next/navigation'
+export default function SignUp() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm()
-    const router = useRouter();
     const [loading, setIsLoading] = useState(false);
-    const [userData, setUserData] = useState({
-        name: '',
-        email: '',
-        password: ''
-    })
+    const router = useRouter();
     const onSubmit = async (data) => {
-        console.log(data)
-        // try {
-        //     setIsLoading(true)
-        //     console.log("ok")
-        //     //   const response = await axios.post("/api/users/login", userData);
-        //     //   if(response){      
-        //     //     router.push('/profile')
-        //     //   } 
-        // } catch (error) {
-        //     setIsLoading(false)
-        //     toast.error(error.response.data.error)
-        // } finally {
-        //     setIsLoading(false)
-        // }
+        try {
+            setIsLoading(true)
+            const response = await axios.post('/api/user/signup',data)
+            if (response.data.success) {
+                router.push('/')
+                toast.success(response.data.message)
+            }
+        } catch (error) {
+            setIsLoading(false)
+            toast.error(error.response?.data.message)
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -310,24 +304,24 @@ export default function Login() {
                     </div>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
-                            {!errors.name ?(
-                                  <label
-                                  htmlFor="name"
-                                  className="block text-sm font-medium text-gray-700"
-                              >
-                                  Name
-                              </label>
-
-                            ):(
+                            {!errors.name ? (
                                 <label
-                                htmlFor="name"
-                                className="block text-sm font-medium text-red-700"
-                            >
-                                {`${errors.name?.message}`}
-                            </label>
+                                    htmlFor="name"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Name
+                                </label>
+
+                            ) : (
+                                <label
+                                    htmlFor="name"
+                                    className="block text-sm font-medium text-red-700"
+                                >
+                                    {`${errors.name?.message}`}
+                                </label>
 
                             )}
-                          
+
                             <input
                                 type="text"
                                 id="name"
@@ -337,8 +331,8 @@ export default function Login() {
                                     required: "name is required"
                                 })}
                                 className={`block w-full bg-transparent outline-none border-b-2 py-2 px-4  text-gray-700 placeholder-gray-400 focus:border-gray-600 ${errors.name
-                                        ? " border-red-400"
-                                        : " border-gray-400"
+                                    ? " border-red-400"
+                                    : " border-gray-400"
                                     }`}
                             />
                         </div>
@@ -377,8 +371,8 @@ export default function Login() {
                                 name="email"
                                 placeholder='Enter your email'
                                 className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.email
-                                        ? " border-red-400"
-                                        : " border-gray-400"
+                                    ? " border-red-400"
+                                    : " border-gray-400"
                                     }`}
                             />
                         </div>
@@ -424,15 +418,15 @@ export default function Login() {
                                 }
                                 placeholder="Enter your password"
                                 className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.password
-                                        ? " border-red-400"
-                                        : " border-gray-400"
+                                    ? " border-red-400"
+                                    : " border-gray-400"
                                     }`}
                             />
                         </div>
 
                         <div>
                             {
-                                !errors.confirmpwd?
+                                !errors.confirmpwd ?
                                     (
                                         <label
                                             htmlFor="confirmpwd"
@@ -463,8 +457,8 @@ export default function Login() {
                                 })}
                                 placeholder="Enter conform password"
                                 className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.confirmpwd
-                                        ? " border-red-400"
-                                        : " border-gray-400"
+                                    ? " border-red-400"
+                                    : " border-gray-400"
                                     }`}
                             />
                         </div>
@@ -474,7 +468,7 @@ export default function Login() {
                                     type="submit"
                                     className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800  focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
                                 >
-                                    Login
+                                    Sign Up
                                 </button> : <Loading />}
                         </div>
                     </form>
