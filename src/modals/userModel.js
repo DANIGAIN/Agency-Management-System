@@ -15,7 +15,9 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+    },
+    providerId:{
+        type: String
     },
     role: {
         type: Number,

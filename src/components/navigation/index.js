@@ -1,8 +1,10 @@
 'use client'
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
+import { useAppContext } from '@/context';
 function Navigation() {
     const [header, setHeader] = useState(false);
+    const { user, isAuthUser, } = useAppContext()
 
     const scrollHeader = () => {
         if (window.scrollY >= 20) {
@@ -14,7 +16,6 @@ function Navigation() {
 
     useEffect(() => {
         window.addEventListener("scroll", scrollHeader);
-
         return () => {
             window.removeEventListener("scroll", scrollHeader);
         }
@@ -43,10 +44,12 @@ function Navigation() {
                             data-dropdown-placement="bottom"
                         >
                             <span className="sr-only">Open user menu</span>
-                            <img
-                                className="w-8 h-8 rounded-full"
-                                src="/docs/images/people/profile-picture-3.jpg"
-                                alt="user photo"
+                            <Image
+                                className="rounded-full"
+                                src="/assets/icon.png"
+                                width={40}
+                                height={40}
+                                alt='no image'
                             />
                         </button>
                         {/* Dropdown menu */}

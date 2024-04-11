@@ -3,22 +3,13 @@ import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import React, { useState }from 'react'
 import { Loading } from '@/components/loading/dot'
-import { useAppContext } from '@/context'
-import toast from 'react-hot-toast'
-// import  useAppContext  from '@/context'
+import {signIn ,useSession } from 'next-auth/react'
 export default function Login() {
     const [userData, setUserData] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false)
-    const { user,
-        setUser,
-        isAuthUser,
-        setIsAuthUser} = useAppContext()
-    console.log(user)
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm()
+    const {register,handleSubmit,formState:{ errors }} = useForm()
+    const session = useSession();
+    console.log(session)
 
     const onSubmit = async (data) => {
         console.log(data)
@@ -263,6 +254,7 @@ export default function Login() {
                         <div className="w-full lg:w-1/2 mb-2 lg:mb-0">
                             <button
                                 type="button"
+                                onClick={()=> signIn('google')}
                                 className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
                             >
                                 <svg
@@ -294,6 +286,7 @@ export default function Login() {
                         <div className="w-full lg:w-1/2 ml-0 lg:ml-2">
                             <button
                                 type="button"
+                                onClick={()=> signIn('github')}
                                 className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
                             >
                                 <svg

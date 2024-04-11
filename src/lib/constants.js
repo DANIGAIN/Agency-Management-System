@@ -27,6 +27,13 @@ export const pricingCards = [
       priceId: 'price_1OYxkqFj9oKEERu1NbKUxXxN',
     },
   ]
+
+export const adminUser = [
+  'danigain1234@gmail.com',
+  'x@gmail.com',
+  'y@gmail.com',
+  'z@gmail.com'
+]
 export const publicDomain =[
     '/team-condition'
 ]
