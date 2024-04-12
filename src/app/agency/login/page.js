@@ -6,26 +6,25 @@ import { Loading } from '@/components/loading/dot'
 import {signIn ,useSession } from 'next-auth/react'
 export default function Login() {
     const [userData, setUserData] = useState({ email: '', password: '' });
-    const [loading, setLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const {register,handleSubmit,formState:{ errors }} = useForm()
     const session = useSession();
     console.log(session)
 
     const onSubmit = async (data) => {
-        console.log(data)
-        // try {
-        //     setIsLoading(true)
-        //     const response = await axios.post("/api/users/login", userData);
-        //     if (response) {
-        //         router.push('/profile')
-        //     }
-        // } catch (error) {
-        //     setIsLoading(false)
-        //     toast.error(error.response.data.error)
-        // } finally {
-        //     setIsLoading(false)
-        // }
-    }
+         
+        try {
+            setIsLoading(true) 
+            const response = await signIn("credentials",data);
+        
+        } catch (error) {
+            setIsLoading(false)
+            console.log(error)
+            // toast.error(error.response.data.error)
+        } finally {
+            setIsLoading(false)
+        } 
+    }   
     return (
         <div className="flex h-screen">
             <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
@@ -393,7 +392,7 @@ export default function Login() {
                         </div>
 
                         <div>
-                            {!loading ?
+                            {!isLoading ?
                                 <button
                                     type="submit"
                                     className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
