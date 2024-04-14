@@ -8,8 +8,6 @@ function Navigation() {
     const [header, setHeader] = useState(false);
     const [isMenuOpen, setMenuOpen] = useState(false)
     const { data: session, status } = useSession()
-    console.log(session)
-    console.log(status)
     const scrollHeader = () => {
         if (window.scrollY >= 20) {
             setHeader(true)
@@ -22,7 +20,7 @@ function Navigation() {
         return () => {
             window.removeEventListener("scroll", scrollHeader);
         }
-    }, []);
+    }, []);  
     return (
         <div>
         <div className={header ? 'fixed w-full text-white' : 'bg-transparent'}>
@@ -35,7 +33,11 @@ function Navigation() {
                     <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                         {status == 'authenticated' && <button type="button" onClick={()=>setMenuOpen(!isMenuOpen)} className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
                             <span className="sr-only">Open user menu</span>
-                            <Image className="rounded-full" src={`${session.user?.image}`} alt="user photo" height={35} width={35}/>
+                            {session.user?.image ?
+                                <Image className="rounded-full" src={`${session.user?.image }`} alt="user photo" height={35} width={35}/>
+                                   : 
+                                 <Skeleton/>
+                             } 
                         </button> }
                         {status == 'loading' && <Skeleton/>}
                         {status == 'unauthenticated' &&

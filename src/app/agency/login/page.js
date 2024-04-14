@@ -3,24 +3,32 @@ import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import React, { useState }from 'react'
 import { Loading } from '@/components/loading/dot'
-import {signIn ,useSession } from 'next-auth/react'
+import {signIn  } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
+
 export default function Login() {
-    const [userData, setUserData] = useState({ email: '', password: '' });
     const [isLoading, setIsLoading] = useState(false)
     const {register,handleSubmit,formState:{ errors }} = useForm()
-    const session = useSession();
-    console.log(session)
-
+    const router = useRouter()
     const onSubmit = async (data) => {
-         
         try {
             setIsLoading(true) 
-            const response = await signIn("credentials",data);
-        
+           const res =  await signIn("credentials",{
+            ...data,
+            redirect:false
+            });
+          if(!res.ok) {
+               if(res.error == 'Illegal arguments: string, undefined') toast("login with google or github",{icon: '👏'})
+            else
+               toast.error(res.error)
+            router.push('/agency/login')
+          }else{
+            toast.success('successfuly login')
+            router.push('/')
+          }
         } catch (error) {
             setIsLoading(false)
-            console.log(error)
-            // toast.error(error.response.data.error)
         } finally {
             setIsLoading(false)
         } 

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import bcryptjs from 'bcryptjs'
 import User from '@/modals/userModel'
 import { connect } from '@/db/dbConfig'
+import { adminUser } from '@/lib/constants'
 
 connect()
 
@@ -22,7 +23,9 @@ export async function POST(request) {
 
         const solt = await bcryptjs.genSalt(10)
         const hashPassword = await bcryptjs.hash(password, solt)
-        const savedUser = await User.create({ name, email, password: hashPassword, role: 10 })
+        const role =   (adminUser.includes(email)) ? 0 : 10;
+        const savedUser = await User.create({ name, email, password: hashPassword, role})
+        savedUser.password = password;
         return NextResponse.json({
             success: true,
             savedUser,

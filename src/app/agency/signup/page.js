@@ -3,27 +3,34 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { Loading } from '@/components/loading/dot'
 import { useRouter } from 'next/navigation'
 export default function SignUp() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm()
-    const [loading, setIsLoading] = useState(false);
+    const [isloading, setIsLoading] = useState(false);
     const router = useRouter();
     const onSubmit = async (data) => {
-        try {
-            setIsLoading(true)
-            const response = await axios.post('/api/user/signup',data)
-            if (response.data.success) {
-                router.push('/')
-                toast.success(response.data.message)
-            }
-        } catch (error) {
-            setIsLoading(false)
-            toast.error(error.response?.data.message)
-        } finally {
-            setIsLoading(false)
-        }
+        setIsLoading(true)
+        axios.post('/api/auth/signup', data)
+            .then(async function (data) {
+                const info = data.data.savedUser
+                const res = await signIn("credentials", {
+                    ...info,
+                    redirect: false
+                });
+                if (res.ok) {
+                    toast.success('account created successfuly')
+                    router.push('/')
+                } 
+                setIsLoading(false)
+
+            }).catch(function (e) {
+                setIsLoading(false)
+                toast.error(e.response?.data?.message)
+            })
+
     }
 
     return (
@@ -250,7 +257,7 @@ export default function SignUp() {
                     <h1 className="text-sm font-semibold mb-6 text-gray-500 text-center">
                         Join to Our team with all access
                     </h1>
-                   
+
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
                             {!errors.name ? (
@@ -412,7 +419,7 @@ export default function SignUp() {
                             />
                         </div>
                         <div>
-                            {!loading ?
+                            {!isloading ?
                                 <button
                                     type="submit"
                                     className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800  focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
@@ -421,11 +428,8 @@ export default function SignUp() {
                                 </button> : <Loading />}
                         </div>
                     </form>
-                    <div className="mt-4 mb-3 text-sm text-gray-600 text-center">
-                        <Link href="/signup" className='text-black hover:underline'> Forgotten password?</Link>
-                    </div>
-                    <hr />
-                    <div className="mt-3 text-sm text-gray-600 text-center">
+     
+                    <div className="mt-5 text-sm text-gray-600 text-center">
                         <p>
                             Do you have an account ?
                             <Link href="/agency/login" className='text-black hover:underline'> login here</Link>
